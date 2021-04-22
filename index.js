@@ -4,30 +4,18 @@
 
 window.dataStore = {
 	currentUnits: 'C',
-	currentCity: 'uuuuuuuuu',
+	currentCity: '',
 };
 
-document.getElementById('app-root').innerHTML = App();
 
 
-
-function SearchByCity() {
-	return `<input
-		type='text'
-		value="${window.dataStore.currentCity}"
-		onchange="window.dataStore.currentCity = this.value;" />`;
-}
-
-function UnitSwitch(currentUnits, setCurrentUnits) {
-	return 'UnitSwitch';
-}
-
-function WeatherToday() {
-	return 'WeatherToday';
-}
-
-function WeatherForecast() {
-	return 'WeatherForecast';
+window.renderApp = renderApp;
+renderApp();
+//document.getElementById('app-root').innerHTML = App();
+function renderApp () {
+	document.getElementById('app-root').innerHTML = `
+		${App()}
+	`;
 }
 
 
@@ -41,6 +29,29 @@ function App() {
 		${WeatherForecast()}
 	</div>`
 }
+
+
+function SearchByCity() {
+	return `<input
+		type='text'
+		value="${window.dataStore.currentCity}"
+		onchange="window.dataStore.currentCity = this.value; window.renderApp();" />`;
+}
+
+function UnitSwitch(currentUnits, setCurrentUnits) {
+	return 'UnitSwitch';
+}
+
+function WeatherToday() {
+	return `WeatherToday ${window.dataStore.currentCity}`;
+}
+
+function WeatherForecast() {
+	return 'WeatherForecast';
+}
+
+
+
 
 
 

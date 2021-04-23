@@ -1,9 +1,13 @@
 // Start from here
 
+const KELVIN_UNITS = 'K';
+const CELSIUS_UNITS = 'C';
+const FAHRENHEIT_UNITS = 'F';
+
 
 
 window.dataStore = {
-	currentUnits: 'C',
+	currentUnits: CELSIUS_UNITS,
 	currentCity: '',
 };
 
@@ -39,7 +43,20 @@ function SearchByCity() {
 }
 
 function UnitSwitch(currentUnits, setCurrentUnits) {
-	return 'UnitSwitch';
+	return `<p>Select units</p>
+	${[{value: CELSIUS_UNITS}, {value: FAHRENHEIT_UNITS}].map}
+	<div>
+		<input 
+		type="radio" 
+		value="" 
+		checked
+		onchange="(${setCurrentUnits})(this.value);"
+		/>
+	</div>
+
+
+
+	`;
 }
 
 function WeatherToday() {

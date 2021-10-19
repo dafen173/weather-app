@@ -11,6 +11,9 @@ import {
 window.dataStore = {
   currentUnits: CELSIUS_UNITS,
   currentCity: '',
+  isDataLoading: false,
+  error: null,
+  cityByWeather: {},
 };
 
 function setCurrentUnits(value) {
@@ -19,6 +22,8 @@ function setCurrentUnits(value) {
 }
 
 window.renderApp = renderApp;
+window.performSearch = performSearch;
+window.validateAndLoadData = validateAndLoadData;
 
 renderApp();
 function renderApp() {
@@ -27,25 +32,97 @@ function renderApp() {
 	`;
 }
 
+function weatherResults() {
+  const { currentCity } = window.dataStore;
+
+  let content = '';
+  //initial state
+  if (currentUnits === '') {
+    content = 'Search by city name';
+  } else {
+    //error state
+    //loading state
+    //results state
+    if (isDataLoading) {
+      content = 'Loading...';
+    }
+    if (error !== null) {
+      content = error;
+    }
+    if (isCurrentCityDataLoaded()) {
+      content = `
+			${UnitSwitch(currentUnits, setCurrentUnits)}
+			<br/> 
+			${WeatherToday()}
+			<br/>
+			${WeatherForecast()}
+			`;
+    }
+  }
+  return `<p>${content}</p>`;
+}
+
 function App() {
   return `<div>
 		${SearchByCity()}
-		${UnitSwitch(window.dataStore.currentUnits, setCurrentUnits)}
-		<br/>
-		${WeatherToday()}
-		<br/>
-		${WeatherForecast()}
+		${weatherResults}
 	</div>`;
 }
 
-function SearchByCity() {
-  const weatherData = weatherByCity[window.dataStore.currentCity];
+function isCurrentCityDataLoaded() {
+  const { cityByWeather, currentCity } = window.data;
+  return Boolean(getCurrentCityData());
+}
 
+function validateAndLoadData() {
+  const { currentCity } = window.dataStore;
+
+  if (!allowedCities.includes(currentCity)) {
+    const error = `Enter one of the city name: ${allowedCities.join(', ')}.`;
+    return Promise.resolve({ error });
+  }
+
+  const url = getOpenWeatherMapUrl(currentCity);
+
+  if (!isCurrentCityDataLoaded()) {
+    return fetch(url)
+      .then(response => response.json())
+      .then(data => ({ data }));
+  }
+
+  return Promise.resolve({});
+}
+
+function performSearch(cityName) {
+  window.dataStore.currentCity = cityName;
+  window.dataStore.error = null;
+  window.dataStore.isDataLoading = true;
+
+  window
+    .validateAndLoadData()
+    .then(({ error, data }) => {
+      window.dataStore.isDataLoading = false;
+
+      if (error) {
+        window.dataStore.error = error;
+      } else if (data) {
+        window.dataStore.cityByWeather[cityName] = data;
+      }
+    })
+    .catch(() => {
+      window.dataStore.error = 'Some error occurred.';
+    })
+    .finally(window.renderApp);
+}
+
+function SearchByCity() {
+  //const weatherData = weatherByCity[window.dataStore.currentCity];
   return `<input
 		type='text'
 		value="${window.dataStore.currentCity}"
-		onchange="window.dataStore.currentCity = this.value; window.renderApp()" />
-		${!weatherData ? `Enter one of the city names: ${Object.keys(weatherByCity)}` : ''}`;
+		onchange="window.performSearch(this.value)" 
+		/>`;
+  //${!weatherData ? `Enter one of the city names: ${Object.keys(weatherByCity)}` : ''}`;
 }
 
 function UnitSwitch(currentUnits, setCurrentUnitsCB) {
@@ -71,9 +148,14 @@ function UnitSwitch(currentUnits, setCurrentUnitsCB) {
 	`;
 }
 
+function getCurrentCityData() {
+  const { currentCity, cityByWeather } = window.dataStore;
+  return cityByWeather[currentCity];
+}
+
 function WeatherToday() {
   const { currentCity, currentUnits } = window.dataStore;
-  const weatherData = weatherByCity[currentCity];
+  const weatherData = getCurrentCityData();
 
   let content = '';
 
@@ -97,23 +179,51 @@ function WeatherToday() {
 
 function WeatherForecast() {
   const { currentCity, currentUnits } = window.dataStore;
-  const weatherData = weatherByCity[currentCity];
+  const weatherData = getCurrentCityData();
   let content = '';
 
+  function getPreparedForecastData({
+    dt,
+    temp: { day, night },
+    weather: [{ main, description, icon }],
+  }) {
+    const dateString = getDateFromUnixTimestamp(dt);
+    const dayTempInUnits = displayInUnits(day, currentUnits);
+    const nightTempInUnits = displayInUnits(night, currentUnits);
+    const weatherIcon = getIconFromCode(icon);
+
+    return {
+      dateString,
+      dayTempInUnits,
+      description,
+      main,
+      nightTempInUnits,
+      weatherIcon,
+    };
+  }
+
   if (weatherData) {
-    content += `Weather forcast for ${currentCity}:`;
-    const { daily } = weatherData;
-    content += daily
-      .slice(1)
-      .map(({ dt, temp: { day, night }, weather: [{ main, description, icon }] }) => {
-        const dateString = getDateFromUnixTimestamp(dt);
-        const dayTempInUnits = displayInUnits(day, currentUnits);
-        const nightTempInUnits = displayInUnits(night, currentUnits);
-        const weatherIcon = getIconFromCode(icon);
-        return `<div>For ${dateString}, ${weatherIcon} ${main} (${description}). Day at ${dayTempInUnits}, night at ${nightTempInUnits}</div>`;
-      })
-      .join('');
+    content += `<div>Weather forecast for ${currentCity}:</div>`;
+    const {
+      daily: [, ...forecastData],
+    } = weatherData;
+    const forecastItems = forecastData.map(forecastDataItem => {
+      const preparedForecastDataItem = getPreparedForecastData(forecastDataItem);
+      return WeatherForecastItem(preparedForecastDataItem);
+    });
+    content += forecastItems.join('');
   }
 
   return content ? `<div>${content}</div>` : '';
+}
+
+function WeatherForecastItem({
+  dateString,
+  dayTempInUnits,
+  description,
+  main,
+  nightTempInUnits,
+  weatherIcon,
+}) {
+  return `<div>For ${dateString}, ${weatherIcon} ${main} (${description}). Day at ${dayTempInUnits}, night at ${nightTempInUnits}</div>`;
 }

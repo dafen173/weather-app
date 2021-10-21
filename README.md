@@ -1,6 +1,5 @@
 # Framework
 
-
 Framework features:
 
 - components with props
@@ -8,4 +7,3 @@ Framework features:
 - app state management
 - event handling
 - async network requests
-

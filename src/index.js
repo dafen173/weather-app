@@ -12,22 +12,22 @@ if (module.hot) {
   module.hot.accept();
 }
 
-window.dataStore = {
+/* window.dataStore = {
   currentCity: '',
   isDataLoading: false,
   error: null,
   cityByWeather: {},
   currentUnits: CELSIUS_UNITS,
-};
+}; */
 
 window.renderApp = renderApp;
 window.performSearch = performSearch;
 window.validateAndLoadData = validateAndLoadData;
 
-const setCurrentUnits = function (value) {
+/* const setCurrentUnits = function (value) {
   window.dataStore.currentUnits = value;
   window.renderApp();
-};
+}; */
 
 function isCurrentCityDataLoaded() {
   return Boolean(getCurrentCityData());
@@ -55,6 +55,7 @@ function performSearch(cityName) {
   window.dataStore.currentCity = cityName;
   window.dataStore.error = null;
   window.dataStore.isDataLoading = true;
+  window.renderApp();
 
   window
     .validateAndLoadData()
@@ -81,7 +82,7 @@ function renderApp() {
     `;
 }
 
-function WeatherResults() {
+/* function WeatherResults() {
   const { currentCity, isDataLoading, error, currentUnits } = window.dataStore;
 
   let content = '';
@@ -109,16 +110,16 @@ function WeatherResults() {
 
   // console.log({ content });
   return `<p>${content}</p>`;
-}
+} */
 
-function App() {
+/* function App() {
   return `<div>
    ${SearchByCity()}
    ${WeatherResults()}
   </div>`;
-}
+} */
 
-function UnitSwitch(currentUnits, setCurrentUnitsCB) {
+/* function UnitSwitch(currentUnits, setCurrentUnitsCB) {
   return `
     <p>Select units</p>
   ${[
@@ -141,9 +142,9 @@ function UnitSwitch(currentUnits, setCurrentUnitsCB) {
     )
     .join('')}
 `;
-}
+} */
 
-function SearchByCity() {
+/* function SearchByCity() {
   return `
     <input
         type="text"
@@ -151,14 +152,14 @@ function SearchByCity() {
         onchange="window.performSearch(this.value);" 
     />
   `;
-}
+} */
 
-function getCurrentCityData() {
+/* function getCurrentCityData() {
   const { currentCity, cityByWeather } = window.dataStore;
   return cityByWeather[currentCity];
-}
+} */
 
-function WeatherToday() {
+/* function WeatherToday() {
   const { currentCity, currentUnits } = window.dataStore;
   const weatherData = getCurrentCityData();
   let content = '';
@@ -179,9 +180,9 @@ function WeatherToday() {
   }
 
   return content ? `<div>${content}</div>` : '';
-}
+} */
 
-function WeatherForecast() {
+/* function WeatherForecast() {
   const { currentCity, currentUnits } = window.dataStore;
   const weatherData = getCurrentCityData();
   let content = '';
@@ -219,9 +220,9 @@ function WeatherForecast() {
   }
 
   return content ? `<div>${content}</div>` : '';
-}
+} */
 
-function WeatherForecastItem({
+/* function WeatherForecastItem({
   dateString,
   dayTempInUnits,
   description,
@@ -230,4 +231,4 @@ function WeatherForecastItem({
   weatherIcon,
 }) {
   return `<div>For ${dateString}, ${weatherIcon} ${main} (${description}). Day at ${dayTempInUnits}, night at ${nightTempInUnits}</div>`;
-}
+} */

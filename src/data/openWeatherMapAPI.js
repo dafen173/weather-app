@@ -25,5 +25,6 @@ export function getOpenWeatherMapUrl(cityName) {
 }
 
 export function getIconFromCode(iconCode) {
+  // TODO: extract UI presentation into a component
   return `<img src="http://openweathermap.org/img/wn/${iconCode}@2x.png" width="30px" height="30px" alt="weather icon">`;
 }

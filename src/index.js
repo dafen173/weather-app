@@ -1,4 +1,9 @@
-import {
+import dataStore from './data/dataStore';
+import { validateAndLoadData, performSearch } from './data/weatherData';
+import renderApp from './framework/render';
+//import App from './components/App';
+
+/* import {
   allowedCities,
   CELSIUS_UNITS,
   displayInUnits,
@@ -6,7 +11,7 @@ import {
   getDateFromUnixTimestamp,
   getIconFromCode,
   getOpenWeatherMapUrl,
-} from './utils';
+} from './utils'; */
 
 if (module.hot) {
   module.hot.accept();
@@ -19,21 +24,25 @@ if (module.hot) {
   cityByWeather: {},
   currentUnits: CELSIUS_UNITS,
 }; */
+window.dataStore = dataStore;
 
 window.renderApp = renderApp;
 window.performSearch = performSearch;
 window.validateAndLoadData = validateAndLoadData;
+//window.performSearch = performSearch;
+
+renderApp();
 
 /* const setCurrentUnits = function (value) {
   window.dataStore.currentUnits = value;
   window.renderApp();
 }; */
 
-function isCurrentCityDataLoaded() {
+/* function isCurrentCityDataLoaded() {
   return Boolean(getCurrentCityData());
-}
+} */
 
-function validateAndLoadData() {
+/* function validateAndLoadData() {
   const { currentCity } = window.dataStore;
 
   if (!allowedCities.includes(currentCity)) {
@@ -49,9 +58,9 @@ function validateAndLoadData() {
   }
 
   return Promise.resolve({});
-}
+} */
 
-function performSearch(cityName) {
+/* function performSearch(cityName) {
   window.dataStore.currentCity = cityName;
   window.dataStore.error = null;
   window.dataStore.isDataLoading = true;
@@ -72,15 +81,13 @@ function performSearch(cityName) {
       window.dataStore.error = 'Some error occurred.';
     })
     .finally(window.renderApp);
-}
+} */
 
-renderApp();
-
-function renderApp() {
+/* function renderApp() {
   document.getElementById('app-root').innerHTML = `
         ${App()}
     `;
-}
+} */
 
 /* function WeatherResults() {
   const { currentCity, isDataLoading, error, currentUnits } = window.dataStore;

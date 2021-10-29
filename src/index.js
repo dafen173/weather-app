@@ -1,7 +1,7 @@
 import dataStore from './data/dataStore';
 import { validateAndLoadData, performSearch } from './data/weatherData';
 import renderApp from './framework/render';
-//import App from './components/App';
+import App from './components/App';
 
 /* import {
   allowedCities,
@@ -31,7 +31,7 @@ window.performSearch = performSearch;
 window.validateAndLoadData = validateAndLoadData;
 //window.performSearch = performSearch;
 
-renderApp();
+renderApp(App, 'app-root');
 
 /* const setCurrentUnits = function (value) {
   window.dataStore.currentUnits = value;

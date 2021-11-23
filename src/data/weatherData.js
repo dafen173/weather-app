@@ -29,8 +29,7 @@ export function performSearch(cityName) {
   window.dataStore.isDataLoading = true;
 
   renderApp();
-  window
-    .validateAndLoadData()
+  validateAndLoadData()
     .then(({ error, data }) => {
       window.dataStore.isDataLoading = false;
 

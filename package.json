@@ -74,5 +74,9 @@
     "**/*.{js,css,md,html}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "read-excel-file": "^5.2.25",
+    "xlsx": "^0.17.5"
   }
 }

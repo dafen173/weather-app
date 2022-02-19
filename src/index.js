@@ -1,3 +1,5 @@
+import XLSX from 'xlsx';
+
 import dataStore from './data/dataStore';
 import { validateAndLoadData, performSearch } from './data/weatherData';
 import renderApp from './framework/render';
@@ -53,43 +55,22 @@ var selectedFile;
 
 
 
-let res = fetch('http://www.ctccapital.ua/price_a/inetmag/ktkstock.xls',
+/* let res = fetch('http://www.ctccapital.ua/price_a/inetmag/ktkstock.xls',
       {
        mode: 'no-cors', 
       })
       .then(response => response.text())
-      .then(data => console.log(data))
+      .then(data => console.log(data)) */
 
 
 
 
-      document
-      .getElementById("uploadProjectors")
-      .addEventListener("click", function() {
-        if (res) {
-          console.log("hi res");
-          var fileReader = new FileReader();
-          fileReader.onload = function(event) {
-            var data = event.target.result;
-      
-            var workbook = XLSX.read(data, {
-              type: "binary"
-            });
-            workbook.SheetNames.forEach(sheet => {
-              let rowObject = XLSX.utils.sheet_to_row_object_array(
-                workbook.Sheets[sheet]
-              );
-              let jsonObject = JSON.stringify(rowObject);
-              document.getElementById("jsonData").innerHTML = jsonObject;        
-            });
-          };
-          fileReader.readAsBinaryString(res);
-        }
-      });
+      if(typeof require !== 'undefined') XLSX = require('xlsx');
+      var workbook = XLSX.readFile('./parcer-excel.xlsx');
+      /* DO SOMETHING WITH workbook HERE */
 
+console.log(workbook);
 
-
-    
 
 
 
@@ -133,5 +114,8 @@ let res = fetch('http://www.ctccapital.ua/price_a/inetmag/ktkstock.xls',
 //})
 
 
-
+/* <script
+type="text/javascript"
+src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.3/xlsx.full.min.js"
+></script> */
 

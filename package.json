@@ -74,5 +74,8 @@
     "**/*.{js,css,md,html}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "xlsx": "^0.17.5"
   }
 }

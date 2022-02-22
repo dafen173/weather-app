@@ -108,15 +108,15 @@ var selectedFile;
 
         //let worksheetObject = JSON.stringify(worksheetArray);
 
-
+        console.log(worksheetArray.filter( item => item.A === 'Проекторы'))
       
+
+
+
 
         document.getElementById("jsonData").innerHTML = worksheetArray.map( function(item) {
           return item.C
         })
-
-
-
 
 
     });

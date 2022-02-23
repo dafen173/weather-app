@@ -108,15 +108,17 @@ var selectedFile;
 
         //let worksheetObject = JSON.stringify(worksheetArray);
 
-        console.log(worksheetArray.filter( item => item.A === 'Проекторы'))
+        console.log(worksheetArray.filter( item => item.A === 'Проекторы').forEach(e => console.log(e.C)))
       
 
+        //console.log(worksheetArray.find( e => e.A == 'Проекторы').C)
 
-
-
-        document.getElementById("jsonData").innerHTML = worksheetArray.map( function(item) {
+        /* document.getElementById("jsonData").innerHTML = worksheetArray.map( function(item) {
           return item.C
-        })
+        }) */
+
+        document.getElementById("jsonData").innerHTML = 
+        worksheetArray.filter( item => item.A === 'Проекторы').map(e => e.C)
 
 
     });
